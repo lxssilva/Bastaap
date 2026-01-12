@@ -3,218 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basta: Edición Divertida</title>
+    <title>Generador de Categorías + Puntos</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2c3e50; /* Fondo oscuro más moderno */
+            background-color: #212529; /* Fondo oscuro elegante */
             text-align: center;
-            padding: 20px;
-            color: #ecf0f1;
+            padding: 15px;
+            color: #f8f9fa;
+            margin: 0;
         }
-        h1 { color: #f1c40f; text-shadow: 2px 2px #000; margin-bottom: 5px; }
+        
+        h1 { color: #ffc107; margin: 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px;}
         
         /* Contenedores */
         .card {
-            background: #34495e;
-            padding: 25px;
+            background: #343a40;
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             max-width: 500px;
-            margin: 20px auto;
-            border: 1px solid #46637f;
+            margin: 10px auto;
+            border: 1px solid #495057;
         }
         
-        /* Botones */
-        button {
-            background-color: #e67e22;
+        /* Botón Principal Gigante */
+        button.main-btn {
+            background-color: #0d6efd;
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            margin: 5px;
-            transition: transform 0.1s, background 0.2s;
-            box-shadow: 0 4px 0 #d35400;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 5px 0 #0a58ca;
+            transition: all 0.1s;
         }
-        button:active { transform: translateY(4px); box-shadow: none; }
-        button:hover { background-color: #f39c12; }
+        button.main-btn:active { transform: translateY(5px); box-shadow: none; }
         
-        button.win-btn { 
-            background-color: #27ae60; 
-            font-size: 14px; 
-            padding: 8px 15px; 
-            box-shadow: 0 3px 0 #1e8449;
+        /* Botones Pequeños */
+        button.small-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
         }
-        
-        /* Inputs */
+
+        /* Input Nombre */
         input[type="text"] {
             padding: 12px;
             border-radius: 8px;
             border: none;
-            width: 60%;
-            margin-bottom: 10px;
+            width: 70%;
             font-size: 16px;
             text-align: center;
+            margin-bottom: 10px;
         }
 
-        /* Elementos del juego */
-        #round-counter {
-            color: #95a5a6;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
+        /* Visualizador de Categoría (EL CAMBIO IMPORTANTE) */
         #category-box {
-            background: #ecf0f1;
-            color: #2c3e50;
-            padding: 20px;
-            border-radius: 10px;
+            background: #e9ecef;
+            color: #212529;
+            padding: 30px 20px;
+            border-radius: 12px;
             margin: 20px 0;
-            min-height: 80px;
+            min-height: 120px; /* Altura fija para que no baile */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+            border: 4px solid #ffc107;
         }
 
-        #letter-display { font-size: 3em; font-weight: 800; color: #e74c3c; line-height: 1; }
-        #topic-display { font-size: 1.4em; font-weight: bold; margin-top: 5px; }
+        #topic-main { font-size: 2em; font-weight: 800; line-height: 1.1; margin-bottom: 10px; color: #212529; }
+        #topic-sub { font-size: 1.2em; color: #d63384; font-weight: bold; font-style: italic; }
         
+        /* Marcador */
         .player-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #ecf0f1;
-            color: #333;
-            padding: 12px;
-            margin-bottom: 10px;
+            background: #495057;
+            padding: 10px 15px;
+            margin-bottom: 8px;
             border-radius: 8px;
-            border-left: 8px solid #e67e22;
+            border-left: 5px solid #ffc107;
         }
         
-        .score { font-weight: 900; font-size: 20px; color: #2c3e50; }
+        .score-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .score-num { font-size: 1.5em; font-weight: bold; color: #ffc107; width: 30px; text-align: center;}
+        
+        .btn-point {
+            background: #198754; color: white; border: none;
+            width: 35px; height: 35px; border-radius: 50%;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+        }
 
-        #winner-message {
-            display: none;
-            background-color: #f1c40f;
-            color: #2c3e50;
-        }
-        
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <h1>⚡ BASTA EXTREMO ⚡</h1>
-    <p>El primero en llegar a 5 puntos gana.</p>
+    <h1>🧠 Generador de Categorías</h1>
 
     <div id="setup-screen" class="card">
-        <h3>👥 Registro de Jugadores</h3>
+        <h3>Jugadores</h3>
         <input type="text" id="new-player-name" placeholder="Nombre..." autocomplete="off">
-        <button onclick="addPlayer()">Añadir</button>
-        <div id="setup-list" style="margin-top:15px; text-align: left; color: #bdc3c7;"></div>
+        <button class="small-btn" onclick="addPlayer()">Agregar</button>
+        <div id="setup-list" style="margin-top:15px; text-align: left; color: #adb5bd;"></div>
         <br>
-        <button onclick="startGame()" style="width: 100%; background-color: #27ae60; box-shadow: 0 4px 0 #1e8449;">¡EMPEZAR A JUGAR!</button>
+        <button class="main-btn" onclick="startGame()">¡JUGAR!</button>
     </div>
 
     <div id="game-screen" class="card hidden">
-        <div id="round-counter">Ronda 0</div>
-        
-        <div id="category-box">
-            <div id="letter-display">?</div>
-            <div id="topic-display">Presiona el botón</div>
+        <div style="display:flex; justify-content:space-between; color:#adb5bd; font-size:0.9em;">
+            <span id="round-counter">RONDA 0</span>
+            <span onclick="resetGame()" style="cursor:pointer; text-decoration:underline;">Salir</span>
         </div>
         
-        <button onclick="generateRound()">🎲 GIRAR RULETA</button>
-
-        <hr style="border-color: #46637f; margin: 20px 0;">
+        <div id="category-box">
+            <div id="topic-main">Presiona el botón</div>
+            <div id="topic-sub">para nueva categoría</div>
+        </div>
         
-        <div id="players-container">
-            </div>
+        <button class="main-btn" onclick="generateCategory()">🎲 NUEVA CATEGORÍA</button>
+
+        <hr style="border-color: #495057; margin: 25px 0;">
+        
+        <div id="players-container"></div>
     </div>
 
-    <div id="winner-message" class="card">
-        <h1>🏆 ¡TENEMOS UN CAMPEÓN! 🏆</h1>
-        <h2 id="winner-text" style="font-size: 3em; margin: 20px 0;"></h2>
-        <button onclick="resetGame()">Jugar Otra Vez</button>
+    <div id="winner-message" class="card hidden" style="background: #198754; border:none;">
+        <h1>🏆 ¡GANADOR! 🏆</h1>
+        <h2 id="winner-text" style="font-size: 2.5em; margin: 30px 0;"></h2>
+        <button class="main-btn" style="background: white; color: #198754;" onclick="resetGame()">Nueva Partida</button>
     </div>
 
     <script>
-        // VARIABLES
+        // --- DATOS PARA GENERAR ---
+        const subjects = [
+            "Algo", "Un Animal", "Comida", "Ropa", "Un Lugar", 
+            "Famoso/a", "Un Objeto", "Profesión", "Una Marca", "Regalo", 
+            "Película", "Canción", "Excusa", "Insulto",
+            "Vehículo", "Sabor de helado", "App de celular", "Miedo / Fobia",
+            "Personaje de Ficción", "Villano", "Mentira", "Deporte"
+        ];
+
+        const conditions = [
+            "que huela mal", 
+            "que encuentres en la basura", 
+            "que le regalarías a tu ex", 
+            "pegajoso/a", 
+            "que cueste una fortuna", 
+            "útil en un apocalipsis", 
+            "que te de vergüenza comprar", 
+            "de color rojo", 
+            "que haga mucho ruido", 
+            "que quepa en tu bolsillo", 
+            "peligroso de tocar", 
+            "que hay en un hospital", 
+            "para conquistar a alguien", 
+            "que venderías por dinero",
+            "que sea ilegal",
+            "que encuentras en la playa",
+            "que flote en el agua",
+            "que se coma con cuchara",
+            "que usas cuando estás triste",
+            "que empiece con la letra de la ronda" // Genérico para el juego físico
+        ];
+
         let players = [];
         let round = 0;
         const winningScore = 5;
-        const letters = "ABCDEFGHIJLMNOPQRSTUVYZ";
 
-        // LISTA MEJORADA DE CATEGORÍAS
-        const categories = [
-            // Clásicas
-            "Nombres", "Apellidos", "Países o Ciudades", "Animales", "Colores", 
-            "Frutas o Verduras", "Marcas", "Comidas", "Profesiones", "Ropa", 
-            "Partes del cuerpo", "Deportes", "Cosas de la cocina",
-            
-            // Difíciles / Divertidas
-            "Excusas para llegar tarde", 
-            "Cosas que encuentras en un refrigerador", 
-            "Regalos horribles", 
-            "Nombres de bandas de música", 
-            "Cosas redondas", 
-            "Insultos que no son groserías", 
-            "Cosas pegajosas", 
-            "Villanos de Disney o Películas", 
-            "Cosas que compras en la farmacia", 
-            "Palabras que terminen en 'ION'", 
-            "Cosas que hacen ruido", 
-            "Títulos de canciones", 
-            "Cosas que llevas a una isla desierta",
-            "Sabores de helado",
-            "Personajes históricos",
-            "Cosas que no debes decir en una cita"
-        ];
+        // --- FUNCIONES ---
 
-        // FUNCIONES
         function addPlayer() {
             const input = document.getElementById('new-player-name');
             const name = input.value.trim();
             if (name) {
                 players.push({ name: name, score: 0 });
-                const list = document.getElementById('setup-list');
-                list.innerHTML += `<div style="padding:5px; border-bottom:1px solid #555;">✅ ${name}</div>`;
+                renderSetupList();
                 input.value = '';
                 input.focus();
             }
         }
 
+        function renderSetupList() {
+            document.getElementById('setup-list').innerHTML = players.map(p => `<div>✅ ${p.name}</div>`).join('');
+        }
+
         function startGame() {
-            if (players.length < 1) {
-                alert("¡Agrega al menos un jugador!");
-                return;
-            }
+            if (players.length < 1) { alert("¡Faltan jugadores!"); return; }
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             renderScoreboard();
         }
 
-        function generateRound() {
+        function generateCategory() {
             round++;
             document.getElementById('round-counter').innerText = "RONDA " + round;
-
-            // Animación simple de texto cargando
-            document.getElementById('letter-display').innerText = "...";
-            document.getElementById('topic-display').innerText = "Eligiendo...";
+            
+            // Efecto visual rápido
+            document.getElementById('topic-main').innerText = "...";
+            document.getElementById('topic-sub').innerText = "";
 
             setTimeout(() => {
-                const randomCat = categories[Math.floor(Math.random() * categories.length)];
-                const randomLet = letters[Math.floor(Math.random() * letters.length)];
+                const sub = subjects[Math.floor(Math.random() * subjects.length)];
+                const cond = conditions[Math.floor(Math.random() * conditions.length)];
                 
-                document.getElementById('letter-display').innerText = randomLet;
-                document.getElementById('topic-display').innerText = randomCat;
-            }, 300); // Pequeño retraso para dar emoción
+                document.getElementById('topic-main').innerText = sub;
+                document.getElementById('topic-sub').innerText = cond;
+            }, 150);
         }
 
         function givePoint(index) {
@@ -233,17 +245,11 @@
             players.forEach((player, index) => {
                 const div = document.createElement('div');
                 div.className = 'player-row';
-                // Calculamos cuánto falta para ganar
-                const remaining = winningScore - player.score;
-                
                 div.innerHTML = `
-                    <div style="text-align:left">
-                        <span style="font-weight:bold; font-size:1.1em">${player.name}</span>
-                        <div style="font-size:0.8em; color:#7f8c8d">Faltan ${remaining}</div>
-                    </div>
-                    <div style="text-align:right">
-                        <span class="score">${player.score}</span>
-                        <button class="win-btn" onclick="givePoint(${index})">+1</button>
+                    <span style="font-weight:bold; font-size:1.1em">${player.name}</span>
+                    <div class="score-box">
+                        <span class="score-num">${player.score}</span>
+                        <button class="btn-point" onclick="givePoint(${index})">+</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -252,25 +258,23 @@
 
         function endGame(winnerName) {
             document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('winner-message').style.display = 'block';
+            document.getElementById('winner-message').classList.remove('hidden');
             document.getElementById('winner-text').innerText = winnerName;
-            // Efecto de confeti (simulado con emojis en el título)
         }
 
         function resetGame() {
             players = [];
             round = 0;
-            document.getElementById('setup-list').innerHTML = '';
-            document.getElementById('winner-message').style.display = 'none';
+            renderSetupList();
+            document.getElementById('winner-message').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden'); // Fix para reset desde juego
             document.getElementById('setup-screen').classList.remove('hidden');
-            document.getElementById('round-counter').innerText = "RONDA 0";
-            document.getElementById('letter-display').innerText = "?";
-            document.getElementById('topic-display').innerText = "Presiona el botón";
+            document.getElementById('topic-main').innerText = "Presiona el botón";
+            document.getElementById('topic-sub').innerText = "para nueva categoría";
         }
 
-        // Enter para agregar
-        document.getElementById("new-player-name").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") addPlayer();
+        document.getElementById("new-player-name").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") addPlayer();
         });
     </script>
 </body>
