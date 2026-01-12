@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basta: Edición Divertida</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50; /* Fondo oscuro más moderno */
+            text-align: center;
+            padding: 20px;
+            color: #ecf0f1;
+        }
+        h1 { color: #f1c40f; text-shadow: 2px 2px #000; margin-bottom: 5px; }
+        
+        /* Contenedores */
+        .card {
+            background: #34495e;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            max-width: 500px;
+            margin: 20px auto;
+            border: 1px solid #46637f;
+        }
+        
+        /* Botones */
+        button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 0 #d35400;
+        }
+        button:active { transform: translateY(4px); box-shadow: none; }
+        button:hover { background-color: #f39c12; }
+        
+        button.win-btn { 
+            background-color: #27ae60; 
+            font-size: 14px; 
+            padding: 8px 15px; 
+            box-shadow: 0 3px 0 #1e8449;
+        }
+        
+        /* Inputs */
+        input[type="text"] {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            width: 60%;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* Elementos del juego */
+        #round-counter {
+            color: #95a5a6;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #category-box {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #letter-display { font-size: 3em; font-weight: 800; color: #e74c3c; line-height: 1; }
+        #topic-display { font-size: 1.4em; font-weight: bold; margin-top: 5px; }
+        
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ecf0f1;
+            color: #333;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 8px solid #e67e22;
+        }
+        
+        .score { font-weight: 900; font-size: 20px; color: #2c3e50; }
+
+        #winner-message {
+            display: none;
+            background-color: #f1c40f;
+            color: #2c3e50;
+        }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>⚡ BASTA EXTREMO ⚡</h1>
+    <p>El primero en llegar a 5 puntos gana.</p>
+
+    <div id="setup-screen" class="card">
+        <h3>👥 Registro de Jugadores</h3>
+        <input type="text" id="new-player-name" placeholder="Nombre..." autocomplete="off">
+        <button onclick="addPlayer()">Añadir</button>
+        <div id="setup-list" style="margin-top:15px; text-align: left; color: #bdc3c7;"></div>
+        <br>
+        <button onclick="startGame()" style="width: 100%; background-color: #27ae60; box-shadow: 0 4px 0 #1e8449;">¡EMPEZAR A JUGAR!</button>
+    </div>
+
+    <div id="game-screen" class="card hidden">
+        <div id="round-counter">Ronda 0</div>
+        
+        <div id="category-box">
+            <div id="letter-display">?</div>
+            <div id="topic-display">Presiona el botón</div>
+        </div>
+        
+        <button onclick="generateRound()">🎲 GIRAR RULETA</button>
+
+        <hr style="border-color: #46637f; margin: 20px 0;">
+        
+        <div id="players-container">
+            </div>
+    </div>
+
+    <div id="winner-message" class="card">
+        <h1>🏆 ¡TENEMOS UN CAMPEÓN! 🏆</h1>
+        <h2 id="winner-text" style="font-size: 3em; margin: 20px 0;"></h2>
+        <button onclick="resetGame()">Jugar Otra Vez</button>
+    </div>
+
+    <script>
+        // VARIABLES
+        let players = [];
+        let round = 0;
+        const winningScore = 5;
+        const letters = "ABCDEFGHIJLMNOPQRSTUVYZ";
+
+        // LISTA MEJORADA DE CATEGORÍAS
+        const categories = [
+            // Clásicas
+            "Nombres", "Apellidos", "Países o Ciudades", "Animales", "Colores", 
+            "Frutas o Verduras", "Marcas", "Comidas", "Profesiones", "Ropa", 
+            "Partes del cuerpo", "Deportes", "Cosas de la cocina",
+            
+            // Difíciles / Divertidas
+            "Excusas para llegar tarde", 
+            "Cosas que encuentras en un refrigerador", 
+            "Regalos horribles", 
+            "Nombres de bandas de música", 
+            "Cosas redondas", 
+            "Insultos que no son groserías", 
+            "Cosas pegajosas", 
+            "Villanos de Disney o Películas", 
+            "Cosas que compras en la farmacia", 
+            "Palabras que terminen en 'ION'", 
+            "Cosas que hacen ruido", 
+            "Títulos de canciones", 
+            "Cosas que llevas a una isla desierta",
+            "Sabores de helado",
+            "Personajes históricos",
+            "Cosas que no debes decir en una cita"
+        ];
+
+        // FUNCIONES
+        function addPlayer() {
+            const input = document.getElementById('new-player-name');
+            const name = input.value.trim();
+            if (name) {
+                players.push({ name: name, score: 0 });
+                const list = document.getElementById('setup-list');
+                list.innerHTML += `<div style="padding:5px; border-bottom:1px solid #555;">✅ ${name}</div>`;
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function startGame() {
+            if (players.length < 1) {
+                alert("¡Agrega al menos un jugador!");
+                return;
+            }
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            renderScoreboard();
+        }
+
+        function generateRound() {
+            round++;
+            document.getElementById('round-counter').innerText = "RONDA " + round;
+
+            // Animación simple de texto cargando
+            document.getElementById('letter-display').innerText = "...";
+            document.getElementById('topic-display').innerText = "Eligiendo...";
+
+            setTimeout(() => {
+                const randomCat = categories[Math.floor(Math.random() * categories.length)];
+                const randomLet = letters[Math.floor(Math.random() * letters.length)];
+                
+                document.getElementById('letter-display').innerText = randomLet;
+                document.getElementById('topic-display').innerText = randomCat;
+            }, 300); // Pequeño retraso para dar emoción
+        }
+
+        function givePoint(index) {
+            players[index].score++;
+            if (players[index].score >= winningScore) {
+                endGame(players[index].name);
+            } else {
+                renderScoreboard();
+            }
+        }
+
+        function renderScoreboard() {
+            const container = document.getElementById('players-container');
+            container.innerHTML = '';
+            
+            players.forEach((player, index) => {
+                const div = document.createElement('div');
+                div.className = 'player-row';
+                // Calculamos cuánto falta para ganar
+                const remaining = winningScore - player.score;
+                
+                div.innerHTML = `
+                    <div style="text-align:left">
+                        <span style="font-weight:bold; font-size:1.1em">${player.name}</span>
+                        <div style="font-size:0.8em; color:#7f8c8d">Faltan ${remaining}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <span class="score">${player.score}</span>
+                        <button class="win-btn" onclick="givePoint(${index})">+1</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function endGame(winnerName) {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('winner-message').style.display = 'block';
+            document.getElementById('winner-text').innerText = winnerName;
+            // Efecto de confeti (simulado con emojis en el título)
+        }
+
+        function resetGame() {
+            players = [];
+            round = 0;
+            document.getElementById('setup-list').innerHTML = '';
+            document.getElementById('winner-message').style.display = 'none';
+            document.getElementById('setup-screen').classList.remove('hidden');
+            document.getElementById('round-counter').innerText = "RONDA 0";
+            document.getElementById('letter-display').innerText = "?";
+            document.getElementById('topic-display').innerText = "Presiona el botón";
+        }
+
+        // Enter para agregar
+        document.getElementById("new-player-name").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") addPlayer();
+        });
+    </script>
+</body>
+</html>
