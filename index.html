@@ -3,120 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Categorías + Puntos</title>
+    <title>Basta Inteligente</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #212529; /* Fondo oscuro elegante */
-            text-align: center;
-            padding: 15px;
-            color: #f8f9fa;
-            margin: 0;
-        }
-        
+        /* ESTILOS (Mismo diseño elegante oscuro) */
+        body { font-family: 'Segoe UI', sans-serif; background-color: #212529; text-align: center; padding: 15px; color: #f8f9fa; margin: 0; }
         h1 { color: #ffc107; margin: 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px;}
         
-        /* Contenedores */
-        .card {
-            background: #343a40;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            max-width: 500px;
-            margin: 10px auto;
-            border: 1px solid #495057;
-        }
+        .card { background: #343a40; padding: 20px; border-radius: 15px; max-width: 500px; margin: 10px auto; border: 1px solid #495057; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         
-        /* Botón Principal Gigante */
-        button.main-btn {
-            background-color: #0d6efd;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            box-shadow: 0 5px 0 #0a58ca;
-            transition: all 0.1s;
-        }
+        button.main-btn { background-color: #0d6efd; color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 10px; box-shadow: 0 5px 0 #0a58ca; transition: all 0.1s; }
         button.main-btn:active { transform: translateY(5px); box-shadow: none; }
         
-        /* Botones Pequeños */
-        button.small-btn {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
+        button.small-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 5px; }
+        input[type="text"] { padding: 12px; border-radius: 8px; border: none; width: 70%; font-size: 16px; text-align: center; margin-bottom: 10px; }
 
-        /* Input Nombre */
-        input[type="text"] {
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            width: 70%;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        /* Visualizador de Categoría (EL CAMBIO IMPORTANTE) */
-        #category-box {
-            background: #e9ecef;
-            color: #212529;
-            padding: 30px 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            min-height: 120px; /* Altura fija para que no baile */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
-            border: 4px solid #ffc107;
-        }
-
-        #topic-main { font-size: 2em; font-weight: 800; line-height: 1.1; margin-bottom: 10px; color: #212529; }
+        #category-box { background: #e9ecef; color: #212529; padding: 30px 20px; border-radius: 12px; margin: 20px 0; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #ffc107; }
+        #topic-main { font-size: 2em; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
         #topic-sub { font-size: 1.2em; color: #d63384; font-weight: bold; font-style: italic; }
         
-        /* Marcador */
-        .player-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #495057;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            border-left: 5px solid #ffc107;
-        }
-        
-        .score-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
+        .player-row { display: flex; justify-content: space-between; align-items: center; background: #495057; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; border-left: 5px solid #ffc107; }
+        .score-box { display: flex; align-items: center; gap: 10px; }
         .score-num { font-size: 1.5em; font-weight: bold; color: #ffc107; width: 30px; text-align: center;}
-        
-        .btn-point {
-            background: #198754; color: white; border: none;
-            width: 35px; height: 35px; border-radius: 50%;
-            font-size: 18px; font-weight: bold; cursor: pointer;
-        }
-
+        .btn-point { background: #198754; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <h1>🧠 Generador de Categorías</h1>
+    <h1>🧠 Generador Inteligente</h1>
 
     <div id="setup-screen" class="card">
         <h3>Jugadores</h3>
@@ -135,13 +49,11 @@
         
         <div id="category-box">
             <div id="topic-main">Presiona el botón</div>
-            <div id="topic-sub">para nueva categoría</div>
+            <div id="topic-sub">para categoría lógica</div>
         </div>
         
         <button class="main-btn" onclick="generateCategory()">🎲 NUEVA CATEGORÍA</button>
-
         <hr style="border-color: #495057; margin: 25px 0;">
-        
         <div id="players-container"></div>
     </div>
 
@@ -152,36 +64,69 @@
     </div>
 
     <script>
-        // --- DATOS PARA GENERAR ---
+        /* LÓGICA INTELIGENTE:
+           type: 'physical' = Cosas que se tocan, huelen, ocupan espacio.
+           type: 'abstract' = Conceptos, nombres, digital.
+        */
+
         const subjects = [
-            "Algo", "Un Animal", "Comida", "Ropa", "Un Lugar", 
-            "Famoso/a", "Un Objeto", "Profesión", "Una Marca", "Regalo", 
-            "Película", "Canción", "Excusa", "Insulto",
-            "Vehículo", "Sabor de helado", "App de celular", "Miedo / Fobia",
-            "Personaje de Ficción", "Villano", "Mentira", "Deporte"
+            // FÍSICOS
+            { text: "Un Animal", type: "physical" },
+            { text: "Una Comida", type: "physical" },
+            { text: "Una Ropa", type: "physical" },
+            { text: "Un Lugar", type: "physical" },
+            { text: "Un Objeto", type: "physical" },
+            { text: "Un Regalo", type: "physical" },
+            { text: "Un Vehículo", type: "physical" },
+            { text: "Fruta o Verdura", type: "physical" },
+            { text: "Parte del cuerpo", type: "physical" },
+            { text: "Cosa de cocina", type: "physical" },
+
+            // ABSTRACTOS O INTANGIBLES
+            { text: "Una Canción", type: "abstract" },
+            { text: "Una Película", type: "abstract" },
+            { text: "Una Excusa", type: "abstract" },
+            { text: "Un Insulto", type: "abstract" },
+            { text: "Una Mentira", type: "abstract" },
+            { text: "Una App de celular", type: "abstract" },
+            { text: "Un Miedo o Fobia", type: "abstract" },
+            { text: "Una Profesión", type: "abstract" },
+            { text: "Un Verbo / Acción", type: "abstract" },
+            
+            // PERSONAS (Son físicas, pero funcionan diferente, las trataremos como físicas para simplificar)
+            { text: "Famoso/a", type: "physical" },
+            { text: "Villano de cine", type: "physical" }
         ];
 
+        /*
+           reqPhysical: true  -> Solo sale con cosas físicas (olor, tacto, ubicación).
+           reqPhysical: false -> Sale con CUALQUIER COSA (precio, legalidad, gusto).
+        */
         const conditions = [
-            "que huela mal", 
-            "que encuentres en la basura", 
-            "que le regalarías a tu ex", 
-            "pegajoso/a", 
-            "que cueste una fortuna", 
-            "útil en un apocalipsis", 
-            "que te de vergüenza comprar", 
-            "de color rojo", 
-            "que haga mucho ruido", 
-            "que quepa en tu bolsillo", 
-            "peligroso de tocar", 
-            "que hay en un hospital", 
-            "para conquistar a alguien", 
-            "que venderías por dinero",
-            "que sea ilegal",
-            "que encuentras en la playa",
-            "que flote en el agua",
-            "que se coma con cuchara",
-            "que usas cuando estás triste",
-            "que empiece con la letra de la ronda" // Genérico para el juego físico
+            // Requieren ser físico
+            { text: "que huela muy mal", reqPhysical: true },
+            { text: "que encuentres en la basura", reqPhysical: true },
+            { text: "que sea pegajoso/a", reqPhysical: true },
+            { text: "que quepa en tu bolsillo", reqPhysical: true },
+            { text: "que encuentres en un hospital", reqPhysical: true },
+            { text: "que flote en el agua", reqPhysical: true },
+            { text: "que se coma con cuchara", reqPhysical: true },
+            { text: "que sea peludo/a", reqPhysical: true },
+            { text: "que sea muy pesado/a", reqPhysical: true },
+            { text: "que haga ruido al caer", reqPhysical: true },
+
+            // Universales (Funcionan con Apps, Canciones, Objetos...)
+            { text: "que le regalarías a tu ex", reqPhysical: false },
+            { text: "que cueste una fortuna", reqPhysical: false },
+            { text: "útil en un apocalipsis", reqPhysical: false },
+            { text: "que te de vergüenza admitir", reqPhysical: false },
+            { text: "que sea ilegal", reqPhysical: false },
+            { text: "para conquistar a alguien", reqPhysical: false },
+            { text: "que usas cuando estás triste", reqPhysical: false },
+            { text: "que empiece con la letra de la ronda", reqPhysical: false },
+            { text: "que odies", reqPhysical: false },
+            { text: "que te haga reír", reqPhysical: false },
+            { text: "muy popular en los 90s", reqPhysical: false }
         ];
 
         let players = [];
@@ -189,6 +134,37 @@
         const winningScore = 5;
 
         // --- FUNCIONES ---
+
+        function generateCategory() {
+            round++;
+            document.getElementById('round-counter').innerText = "RONDA " + round;
+            
+            // Efecto visual
+            document.getElementById('topic-main').innerText = "...";
+            document.getElementById('topic-sub').innerText = "";
+
+            setTimeout(() => {
+                // 1. Elegir un Sujeto al azar
+                const subj = subjects[Math.floor(Math.random() * subjects.length)];
+                
+                // 2. FILTRAR las condiciones
+                // Si el sujeto es "abstracto" (ej: App), filtramos para eliminar las que requieren físico.
+                const validConditions = conditions.filter(cond => {
+                    if (subj.type === 'abstract') {
+                        // Si es abstracto, solo permitimos las que NO requieren físico
+                        return cond.reqPhysical === false;
+                    }
+                    // Si es físico, permitimos TODO (porque un animal puede "costar una fortuna")
+                    return true;
+                });
+
+                // 3. Elegir una condición de la lista filtrada
+                const cond = validConditions[Math.floor(Math.random() * validConditions.length)];
+                
+                document.getElementById('topic-main').innerText = subj.text;
+                document.getElementById('topic-sub').innerText = cond.text;
+            }, 100);
+        }
 
         function addPlayer() {
             const input = document.getElementById('new-player-name');
@@ -210,23 +186,6 @@
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             renderScoreboard();
-        }
-
-        function generateCategory() {
-            round++;
-            document.getElementById('round-counter').innerText = "RONDA " + round;
-            
-            // Efecto visual rápido
-            document.getElementById('topic-main').innerText = "...";
-            document.getElementById('topic-sub').innerText = "";
-
-            setTimeout(() => {
-                const sub = subjects[Math.floor(Math.random() * subjects.length)];
-                const cond = conditions[Math.floor(Math.random() * conditions.length)];
-                
-                document.getElementById('topic-main').innerText = sub;
-                document.getElementById('topic-sub').innerText = cond;
-            }, 150);
         }
 
         function givePoint(index) {
@@ -267,10 +226,10 @@
             round = 0;
             renderSetupList();
             document.getElementById('winner-message').classList.add('hidden');
-            document.getElementById('game-screen').classList.add('hidden'); // Fix para reset desde juego
+            document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('setup-screen').classList.remove('hidden');
             document.getElementById('topic-main').innerText = "Presiona el botón";
-            document.getElementById('topic-sub').innerText = "para nueva categoría";
+            document.getElementById('topic-sub').innerText = "para categoría lógica";
         }
 
         document.getElementById("new-player-name").addEventListener("keypress", function(e) {
